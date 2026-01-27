@@ -1,0 +1,15 @@
+{
+    "nutritionist":[
+        {
+            "username":"AlePerez@nutri.com",
+            "password":"password123"
+        }
+    ],
+
+    "users":[
+        {
+            "username":"PabloMarmol@gmail.com",
+            "password":"123password"
+        }
+    ]
+}
