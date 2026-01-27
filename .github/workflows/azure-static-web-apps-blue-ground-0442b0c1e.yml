@@ -16,7 +16,7 @@ jobs:
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -34,6 +34,11 @@ jobs:
           app_location: "CalTrack" # App source code path
           api_location: "" # Api source code path - optional
           output_location: "CalTrack/dist/CalTrack/browser" # Built app content directory - optional
+
+          app_build_command: "npm install && npm run build"
+          app_settings: |
+              NODE_VERSION=20
+
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
