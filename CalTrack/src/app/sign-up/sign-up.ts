@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -28,7 +28,10 @@ export class SignUpComponent {
     password: ''
   };
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   navigateToLogin(event: Event) {
     event.preventDefault();
@@ -53,8 +56,10 @@ export class SignUpComponent {
     if (error) {
       if (error.code === '23505') {
         this.errorMessage = 'Email already exists';
+        this.cdr.detectChanges(); // Manually trigger change detection
       } else {
         this.errorMessage = 'Something went wrong';
+        this.cdr.detectChanges(); // Manually trigger change detection
         console.error(error);
       }
     } else {

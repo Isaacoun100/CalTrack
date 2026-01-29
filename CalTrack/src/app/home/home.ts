@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,42 +12,44 @@ import { supabase } from '../supabase';
   styleUrls: ['./home.css']
 })
 export class Home {
-
   username = '';
   password = '';
   errorMessage = '';
   loading = false;
   showPassword = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   async login() {
     this.errorMessage = '';
     this.loading = true;
 
-    // 🔎 Check USERS first
-    const userRes = await supabase
-      .from('users')
-      .select('*')
-      .eq('username', this.username)
-      .eq('password', this.password)
-      .maybeSingle();
+    const [userRes, nutriRes] = await Promise.all([
+      supabase
+        .from('users')
+        .select('id')
+        .eq('username', this.username)
+        .eq('password', this.password)
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from('nutritionists')
+        .select('id')
+        .eq('username', this.username)
+        .eq('password', this.password)
+        .limit(1)
+        .maybeSingle()
+    ]);
+
+    this.loading = false;
 
     if (userRes.data) {
-      this.loading = false;
       this.router.navigate(['/user-dashboard']);
       return;
     }
-
-    // 🔎 Then check NUTRITIONISTS
-    const nutriRes = await supabase
-      .from('nutritionists')
-      .select('*')
-      .eq('username', this.username)
-      .eq('password', this.password)
-      .maybeSingle();
-
-    this.loading = false;
 
     if (nutriRes.data) {
       this.router.navigate(['/nutri-dashboard']);
@@ -55,6 +57,7 @@ export class Home {
     }
 
     this.errorMessage = 'Invalid username or password';
+    this.cdr.detectChanges(); // Manually trigger change detection
   }
 
   goToSignUp() {
