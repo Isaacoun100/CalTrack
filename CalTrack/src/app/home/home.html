@@ -23,28 +23,43 @@
 
         <h3 class="mb-4 text-center">Sign In</h3>
 
-        <input
-          type="email"
-          class="form-control mb-3"
-          placeholder="Email"
-          [(ngModel)]="username">
+        <form (ngSubmit)="login()" #form="ngForm">
 
-        <input
-          type="password"
-          class="form-control mb-3"
-          placeholder="Password"
-          [(ngModel)]="password">
+          <input
+            type="email"
+            class="form-control mb-3"
+            placeholder="Email"
+            name="username"
+            [(ngModel)]="username"
+            required>
 
-        <button
-          class="btn btn-primary w-100 mb-3"
-          (click)="login()">
-          Log In
-        </button>
+          <div class="input-group mb-3">
+            <input
+              class="form-control"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Password"
+              name="password"
+              [(ngModel)]="password"
+              required>
 
-        <!-- Error message -->
-        <div
-          class="text-danger text-center mb-2"
-          *ngIf="errorMessage">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="showPassword = !showPassword">
+              👁
+            </button>
+          </div>
+
+          <button
+            class="btn btn-primary w-100 mb-3"
+            [disabled]="form.invalid || loading">
+            {{ loading ? 'Checking...' : 'Log In' }}
+          </button>
+
+        </form>
+
+        <!-- Error message-->
+        <div class="text-danger text-center mb-2" *ngIf="errorMessage">
           {{ errorMessage }}
         </div>
 

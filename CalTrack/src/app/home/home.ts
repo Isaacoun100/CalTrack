@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { supabase } from '../supabase';
 
 @Component({
   selector: 'app-home',
@@ -16,35 +16,45 @@ export class Home {
   username = '';
   password = '';
   errorMessage = '';
+  loading = false;
+  showPassword = false;
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {}
+  constructor(private router: Router) {}
 
-  login() {
-    this.http.get<any>('clients.json').subscribe(data => {
+  async login() {
+    this.errorMessage = '';
+    this.loading = true;
 
-      const nutri = data.nutritionist.find(
-        (n: any) => n.username === this.username && n.password === this.password
-      );
+    // 🔎 Check USERS first
+    const userRes = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', this.username)
+      .eq('password', this.password)
+      .maybeSingle();
 
-      if (nutri) {
-        this.router.navigate(['/nutri-dashboard']);
-        return;
-      }
+    if (userRes.data) {
+      this.loading = false;
+      this.router.navigate(['/user-dashboard']);
+      return;
+    }
 
-      const user = data.users.find(
-        (u: any) => u.username === this.username && u.password === this.password
-      );
+    // 🔎 Then check NUTRITIONISTS
+    const nutriRes = await supabase
+      .from('nutritionists')
+      .select('*')
+      .eq('username', this.username)
+      .eq('password', this.password)
+      .maybeSingle();
 
-      if (user) {
-        this.router.navigate(['/user-dashboard']);
-        return;
-      }
+    this.loading = false;
 
-      this.errorMessage = 'Invalid username or password';
-    });
+    if (nutriRes.data) {
+      this.router.navigate(['/nutri-dashboard']);
+      return;
+    }
+
+    this.errorMessage = 'Invalid username or password';
   }
 
   goToSignUp() {

@@ -1,6 +1,13 @@
 {
     "nutritionist":[
         {
+            "firstName":"Alex",
+            "firstLastName":"Perez",
+            "secondLastName":"Hernandez",
+            "height": 1.85,
+            "weight": 80.5,
+            "age": 30,
+            "phoneNumber":"+13218905676",
             "username":"AlePerez@nutri.com",
             "password":"password123"
         }
@@ -8,6 +15,13 @@
 
     "users":[
         {
+            "firstName":"Pablo",
+            "firstLastName":"Marmol",
+            "secondLastName":"Barbera",
+            "height": 1.65,
+            "weight": 65.5,
+            "age": 25,
+            "phoneNumber":"+13573895894",
             "username":"PabloMarmol@gmail.com",
             "password":"123password"
         }
