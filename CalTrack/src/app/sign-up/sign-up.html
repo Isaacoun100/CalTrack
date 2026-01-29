@@ -1,1 +1,150 @@
-<p>sign-up works!</p>
+<div class="page-bg">
+
+<div class="page-bg vh-100">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button class="btn btn-outline-light me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
+              aria-controls="sidebar">
+        ☰
+      </button>
+      <span class="navbar-brand mb-0 h1">CalTrack</span>
+    </div>
+  </nav>
+
+  <!-- Offcanvas Sidebar -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="sidebarLabel">Menu</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <nav class="nav flex-column p-3">
+        <a
+            class="nav-link active"
+            (click)="navigateToLogin($event)"
+            data-bs-dismiss="offcanvas">
+            ← Back to Login
+        </a>
+
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container-fluid pt-4 h-100 d-flex justify-content-center align-items-start">
+    <div class="card shadow p-4 w-100" style="max-width: 900px;">
+
+      <h2 class="mb-4 text-center">Create Account</h2>
+
+      <form (ngSubmit)="createUser(user)" #form="ngForm">
+
+        <div class="row g-3">
+
+          <div class="col-md-4">
+            <label class="form-label">Name</label>
+            <input class="form-control"
+                   name="firstName"
+                   [(ngModel)]="user.firstName"
+                   required maxlength="20">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">First Last Name</label>
+            <input class="form-control"
+                   name="firstLastName"
+                   [(ngModel)]="user.firstLastName"
+                   required maxlength="20">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Second Last Name</label>
+            <input class="form-control"
+                   name="secondLastName"
+                   [(ngModel)]="user.secondLastName"
+                   required maxlength="20">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Height (m)</label>
+            <input class="form-control"
+                   type="number"
+                   step="0.01"
+                   name="height"
+                   [(ngModel)]="user.height"
+                   required>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Weight (kg)</label>
+            <input class="form-control"
+                   type="number"
+                   step="0.1"
+                   name="weight"
+                   [(ngModel)]="user.weight"
+                   required>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Age</label>
+            <input class="form-control"
+                   type="number"
+                   name="age"
+                   [(ngModel)]="user.age"
+                   required>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input class="form-control"
+              type="email"
+              name="username"
+              [(ngModel)]="user.username"
+              required>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Phone Number</label>
+            <input class="form-control"
+                   name="phoneNumber"
+                   [(ngModel)]="user.phoneNumber"
+                   maxlength="20"
+                   required>
+          </div>
+
+          <div class="col-md-12">
+            <label class="form-label">Password</label>
+
+            <div class="input-group">
+              <input class="form-control"
+                     [type]="showPassword ? 'text' : 'password'"
+                     name="password"
+                     [(ngModel)]="user.password"
+                     required>
+
+              <button type="button"
+                      class="btn btn-outline-secondary"
+                      (click)="showPassword = !showPassword">
+                👁
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="text-danger mt-3" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <button class="btn btn-success w-100 mt-4"
+                [disabled]="form.invalid">
+          Create User
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+</div>
