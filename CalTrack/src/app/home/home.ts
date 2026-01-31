@@ -47,7 +47,12 @@ export class Home {
     this.loading = false;
 
     if (userRes.data) {
-      this.router.navigate(['/user-dashboard']);
+      if (userRes.data) {
+        localStorage.setItem('user_id', userRes.data.id);
+        this.router.navigate(['/user-dashboard']);
+        return;
+      }
+
       return;
     }
 
