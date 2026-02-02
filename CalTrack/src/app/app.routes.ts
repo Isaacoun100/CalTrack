@@ -16,5 +16,7 @@ export const routes: Routes = [
   { path: 'sign-up', component: SignUpComponent },
   { path: 'check-goals', component:CheckGoals},
   { path: 'check-users', component:CheckUsers},
-  { path: 'log-cal', component:LogCalComponent}
+  { path: 'log-cal', component:LogCalComponent},
+  { path: 'gestion-alimentos', component: GestionAlimentos},
+  { path: 'ver-usuarios', component: VerUsuarios}
 ];
