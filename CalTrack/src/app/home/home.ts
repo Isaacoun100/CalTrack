@@ -58,8 +58,7 @@ export class Home {
 
     if (nutriRes.data) {
       // (optional if you need it later)
-      localStorage.setItem('nutritionistId', nutriRes.data.id.toString());
-
+      localStorage.setItem('nutri_id', nutriRes.data.id);
       this.router.navigate(['/nutri-dashboard']);
       return;
     }
