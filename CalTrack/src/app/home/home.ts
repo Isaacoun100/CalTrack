@@ -57,13 +57,15 @@ export class Home {
     }
 
     if (nutriRes.data) {
-      localStorage.setItem('nutri_id', nutriRes.data.id);
+      // (optional if you need it later)
+      localStorage.setItem('nutritionistId', nutriRes.data.id.toString());
+
       this.router.navigate(['/nutri-dashboard']);
       return;
     }
 
     this.errorMessage = 'Invalid username or password';
-    this.cdr.detectChanges(); // Manually trigger change detection
+    this.cdr.detectChanges();
   }
 
   goToSignUp() {
