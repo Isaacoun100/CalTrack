@@ -47,11 +47,17 @@ export class Home {
     this.loading = false;
 
     if (userRes.data) {
-      this.router.navigate(['/user-dashboard']);
+      if (userRes.data) {
+        localStorage.setItem('user_id', userRes.data.id);
+        this.router.navigate(['/user-dashboard']);
+        return;
+      }
+
       return;
     }
 
     if (nutriRes.data) {
+      localStorage.setItem('nutri_id', nutriRes.data.id);
       this.router.navigate(['/nutri-dashboard']);
       return;
     }
