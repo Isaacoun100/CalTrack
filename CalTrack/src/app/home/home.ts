@@ -47,10 +47,12 @@ export class Home {
     this.loading = false;
 
     if (userRes.data) {
-      // STORE LOGGED USER ID
-      localStorage.setItem('userId', userRes.data.id.toString());
+      if (userRes.data) {
+        localStorage.setItem('user_id', userRes.data.id);
+        this.router.navigate(['/user-dashboard']);
+        return;
+      }
 
-      this.router.navigate(['/user-dashboard']);
       return;
     }
 

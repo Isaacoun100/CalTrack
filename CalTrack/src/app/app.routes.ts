@@ -6,6 +6,8 @@ import { CheckUsers } from './check-users/check-users';
 import { LogCalComponent } from './log-cal/log-cal';
 import { NutriDashboard } from './nutri-dashboard/nutri-dashboard';
 import { SignUpComponent } from './sign-up/sign-up';
+import { GestionAlimentos } from './gestion-alimentos/gestion-alimentos';
+import { VerUsuarios } from './ver-usuarios/ver-usuarios';
 
 export const routes: Routes = [
   { path: '', component: Home },
