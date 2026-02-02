@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { supabase } from '../supabase';
@@ -17,7 +17,7 @@ export class NutriDashboardComponent implements OnInit {
   totalGlobalCalories = 0;
   patients: any[] = []; 
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cdr: ChangeDetectorRef) {}
 
   async ngOnInit() {
     if (!this.nutriId) {
@@ -80,6 +80,7 @@ export class NutriDashboardComponent implements OnInit {
       .in('user_id', patientIds)
       .order('date', { ascending: false })
       .limit(10);
+      this.cdr.detectChanges();
 
     if (!error && data) {
       this.recentPatientMeals = data.map((row: any) => ({
@@ -92,6 +93,15 @@ export class NutriDashboardComponent implements OnInit {
     }
   }
 
+  goToDashboard(){
+    this.router.navigate(['/nutri-dashboard']);
+  }
+  goToGestAlimentos(){
+    this.router.navigate(['/gestion-alimentos'])
+  }
+  goToVerUsuarios(){
+    this.router.navigate(['/ver-usuarios'])
+  }
   logout() {
     localStorage.clear();
     this.router.navigate(['']);
