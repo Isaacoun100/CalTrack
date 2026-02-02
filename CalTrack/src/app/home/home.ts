@@ -47,22 +47,23 @@ export class Home {
     this.loading = false;
 
     if (userRes.data) {
-      if (userRes.data) {
-        localStorage.setItem('user_id', userRes.data.id);
-        this.router.navigate(['/user-dashboard']);
-        return;
-      }
+      // ✅ STORE LOGGED USER ID
+      localStorage.setItem('userId', userRes.data.id.toString());
 
+      this.router.navigate(['/user-dashboard']);
       return;
     }
 
     if (nutriRes.data) {
+      // (optional if you need it later)
+      localStorage.setItem('nutritionistId', nutriRes.data.id.toString());
+
       this.router.navigate(['/nutri-dashboard']);
       return;
     }
 
     this.errorMessage = 'Invalid username or password';
-    this.cdr.detectChanges(); // Manually trigger change detection
+    this.cdr.detectChanges();
   }
 
   goToSignUp() {

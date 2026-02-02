@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { supabase } from '../supabase';
+import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -10,52 +10,138 @@ import { supabase } from '../supabase';
   templateUrl: './user-dashboard.html',
   styleUrls: ['./user-dashboard.css']
 })
-export class UserDashboardComponent implements OnInit {
+export class UserDashboardComponent implements AfterViewInit {
 
-  userId: number | null = Number(localStorage.getItem('user_id')) || null;
-
-  meals: { name: string; kcal: number }[] = [];
+  userId!: number; // now comes from localStorage
 
   totalCalories = 0;
+  meals: any[] = [];
 
-  constructor(private router: Router) {}
+  weeklyLabels: string[] = [];
+  weeklyCalories: number[] = [];
 
-  async ngOnInit() {
-    if (!this.userId) {
-      this.router.navigate(['']);
+  constructor( private cdr: ChangeDetectorRef ){}
+
+  async ngAfterViewInit() {
+
+    this.userId = Number(localStorage.getItem('user_id'));
+
+    // ✅ GET LOGGED USER
+    const storedId = localStorage.getItem('userId');
+
+    if (!storedId) {
+      console.warn('No user logged in');
       return;
     }
 
-    await this.loadMeals();
+    this.userId = Number(storedId);
+
+    await this.loadTodayCalories();
+    await this.loadRecentMeals();
+    await this.loadWeeklyChart();
+  }
+
+  // -------------------------
+  // TOTAL KCAL TODAY
+  // -------------------------
+  async loadTodayCalories() {
+    const today = new Date().toLocaleDateString('en-CA');
+
+    const { data } = await supabase
+      .from('users_meals')
+      .select('kcal')
+      .eq('user_id', this.userId)
+      .eq('date', today);
+
+    this.totalCalories =
+      data?.reduce((sum, m) => sum + Number(m.kcal || 0), 0) || 0;
+  }
+
+  // -------------------------
+  // LAST 10 MEALS
+  // -------------------------
+  async loadRecentMeals() {
+    const { data } = await supabase
+      .from('users_meals')
+      .select(`
+        date,
+        kcal,
+        meals!inner (
+          name
+        )
+      `)
+      .eq('user_id', this.userId)
+      .order('date', { ascending: false })
+      .limit(10);
+
+    this.meals = (data || []).map((m: any) => ({
+      name: m.meals?.name || 'Unknown meal',   // ✅ fixed
+      kcal: m.kcal,
+      date: m.date                            // ✅ added
+    }));
+
+    this.cdr.detectChanges();
+  }
+
+
+  // -------------------------
+  // WEEKLY CHART
+  // -------------------------
+  async loadWeeklyChart() {
+    const start = new Date();
+    start.setDate(start.getDate() - 6);
+
+    const startDate = start.toISOString().split('T')[0];
+
+    const { data } = await supabase
+      .from('users_meals')
+      .select('date, kcal')
+      .eq('user_id', this.userId)
+      .gte('date', startDate)
+      .order('date');
+
+    if (!data || data.length === 0) {
+      this.renderChart([], []);
+      return;
+    }
+
+    const dailyTotals: Record<string, number> = {};
+
+    for (const row of data) {
+      dailyTotals[row.date] =
+        (dailyTotals[row.date] || 0) + Number(row.kcal);
+    }
+
+    this.weeklyLabels = Object.keys(dailyTotals);
+    this.weeklyCalories = Object.values(dailyTotals);
+
+    this.renderChart(this.weeklyLabels, this.weeklyCalories);
+  }
+
+  renderChart(labels: string[], values: number[]) {
+    const ctx = document.getElementById('weeklyChart') as HTMLCanvasElement;
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Calories',
+          data: values,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
   }
 
   logout() {
-    localStorage.removeItem('user_id');
-    this.router.navigate(['']);
-  }
-
-  async loadMeals() {
-    const { data, error } = await supabase
-      .from('users_meals')
-      .select(`
-        kcal,
-        meals ( name )
-      `)
-      .eq('user_id', this.userId);
-
-    if (error) {
-      console.error('Failed loading meals:', error);
-      return;
-    }
-
-    this.meals = (data ?? []).map((row: any) => ({
-      name: row.meals?.name ?? 'Unknown meal',
-      kcal: Number(row.kcal)
-    }));
-
-    this.totalCalories = this.meals.reduce(
-      (sum, m) => sum + m.kcal,
-      0
-    );
+    localStorage.clear();
+    location.href = '/';
   }
 }

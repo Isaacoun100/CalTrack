@@ -1,0 +1,9 @@
+.page-bg {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #77498d,
+    #f6ebe6,
+    #ffeef9
+  );
+}
