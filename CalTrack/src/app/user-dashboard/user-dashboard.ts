@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { supabase } from '../supabase';
 import Chart from 'chart.js/auto';
 
@@ -19,14 +20,24 @@ export class UserDashboardComponent implements AfterViewInit {
 
   weeklyLabels: string[] = [];
   weeklyCalories: number[] = [];
+  sidebarOpen = true;
 
-  constructor( private cdr: ChangeDetectorRef ){}
+  constructor( 
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ){}
+
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
 
   async ngAfterViewInit() {
 
     this.userId = Number(localStorage.getItem('user_id'));
 
-    // ✅ GET LOGGED USER
+    // GET LOGGED USER
     const storedId = localStorage.getItem('userId');
 
     if (!storedId) {
@@ -75,9 +86,9 @@ export class UserDashboardComponent implements AfterViewInit {
       .limit(10);
 
     this.meals = (data || []).map((m: any) => ({
-      name: m.meals?.name || 'Unknown meal',   // ✅ fixed
+      name: m.meals?.name || 'Unknown meal',
       kcal: m.kcal,
-      date: m.date                            // ✅ added
+      date: m.date
     }));
 
     this.cdr.detectChanges();
@@ -139,7 +150,19 @@ export class UserDashboardComponent implements AfterViewInit {
       }
     });
   }
-
+  
+  goToUserDashboard() {
+    this.router.navigate(['/user-dashboard']);
+  }
+  
+  goToGoals() {
+    this.router.navigate(['/check-goals']);
+  }
+  
+  goToLogCal() {
+    this.router.navigate(['/log-cal']);
+  }
+  
   logout() {
     localStorage.clear();
     location.href = '/';

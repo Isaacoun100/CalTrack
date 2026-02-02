@@ -9,15 +9,21 @@
       <ul class="nav flex-column gap-2">
   
         <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/user-dashboard">Dashboard</a>
+          <button class="btn btn-outline-light w-100" (click)="goToUserDashboard()">
+            User Dashboard
+          </button>
         </li>
   
         <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/check-goals">Goals</a>
+          <button class="btn btn-outline-light w-100" (click)="goToGoals()">
+            Goals
+          </button>
         </li>
   
         <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/check-users">Users</a>
+          <button class="btn btn-outline-light w-100" (click)="goToLogCal()">
+            Log Calories
+          </button>
         </li>
   
         <li class="nav-item mt-auto">

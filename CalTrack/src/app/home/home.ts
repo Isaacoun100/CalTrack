@@ -47,7 +47,7 @@ export class Home {
     this.loading = false;
 
     if (userRes.data) {
-      // ✅ STORE LOGGED USER ID
+      // STORE LOGGED USER ID
       localStorage.setItem('userId', userRes.data.id.toString());
 
       this.router.navigate(['/user-dashboard']);
