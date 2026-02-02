@@ -1,1 +1,116 @@
-<p>log-cal works!</p>
+<div class="page-bg">
+  <div class="d-flex vh-100">
+
+    <!-- SIDEBAR -->
+    <div class="bg-dark text-white p-3" style="width: 240px;">
+
+      <h4 class="mb-4">CalTrack</h4>
+
+      <ul class="nav flex-column gap-2">
+
+        <li class="nav-item">
+          <button class="btn btn-outline-light w-100" (click)="goToUserDashboard()">
+            User Dashboard
+          </button>
+        </li>
+
+        <li class="nav-item">
+          <button class="btn btn-outline-light w-100" (click)="goToGoals()">
+            Goals
+          </button>
+        </li>
+
+        <li class="nav-item">
+          <button class="btn btn-outline-light w-100" (click)="goToLogCal()">
+            Log Calories
+          </button>
+        </li>
+
+        <li class="nav-item mt-auto">
+          <button class="btn btn-outline-light w-100" (click)="logout()">
+            Sign Out
+          </button>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- CENTER FORM -->
+    <div class="flex-grow-1 p-4 d-flex justify-content-center">
+
+      <div class="card shadow-sm p-4" style="width: 400px;">
+
+        <h4 class="text-center mb-4">Register your meal</h4>
+
+        <form (ngSubmit)="logMeal()" #form="ngForm">
+
+          <!-- MEAL -->
+          <label class="form-label">Name</label>
+          <input
+            list="mealsList"
+            class="form-control"
+            [(ngModel)]="selectedMealName"
+            name="meal"
+            (input)="onMealSelected()"
+            required>
+
+          <datalist id="mealsList">
+            <option *ngFor="let meal of meals" [value]="meal.name"></option>
+          </datalist>
+
+          <!-- WEIGHT -->
+          <label class="form-label mt-3">Weight (g)</label>
+          <input
+            type="number"
+            class="form-control"
+            min="0"
+            [(ngModel)]="weight"
+            name="weight"
+            (input)="calculateCalories()"
+            required>
+
+          <!-- CALORIES -->
+          <label class="form-label mt-3">Calories</label>
+          <input
+            class="form-control"
+            [value]="calculatedCalories"
+            disabled>
+
+          <!-- BUTTON -->
+          <button
+            type="submit"
+            class="btn btn-primary w-100 mt-4"
+            [disabled]="!selectedMeal || loading">
+            {{ loading ? 'Logging...' : 'Log meal' }}
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+
+    <!-- TODAY MEALS -->
+    <div class="p-4" style="width:350px">
+
+      <div class="card shadow-sm p-3 h-100">
+
+        <h5 class="mb-3">Today's meals</h5>
+
+        <div *ngFor="let meal of todayMeals"
+             class="d-flex justify-content-between border-bottom py-2">
+
+          <span>{{ meal.name }}</span>
+          <strong>{{ meal.kcal }} kcal</strong>
+
+        </div>
+
+        <div *ngIf="todayMeals.length === 0"
+             class="text-muted text-center mt-3">
+          No meals today
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
