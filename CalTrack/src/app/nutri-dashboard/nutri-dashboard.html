@@ -24,11 +24,38 @@
     </div>
 
     <div class="flex-grow-1 p-4 bg-light overflow-auto">
-      
+
+      <!-- ASSIGN USER TO NUTRITIONIST -->
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+
+    <h5 class="mb-3">Asignar nuevo paciente</h5>
+
+    <div class="d-flex gap-2 align-items-end">
+
+      <div class="flex-grow-1">
+        <label class="form-label">Usuario disponible</label>
+        <select class="form-select" [(ngModel)]="selectedUserId">
+          <option *ngFor="let u of availableUsers" [value]="u.id">
+            {{ u.firstName }} {{ u.firstLastName }}
+          </option>
+        </select>
+        </div>          <button
+            class="btn btn-success"
+            (click)="assignUser()"
+            [disabled]="!selectedUserId || assigning">
+            {{ assigning ? 'Asignando...' : 'Asignar' }}
+          </button>
+        </div>
+
+      </div>
+
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Dashboard</h2>
         <span class="badge bg-info text-white bg-black">Total Pacientes: {{ patients.length }}</span>
       </div>
+
+  </div>
 
   <div class="card shadow-sm">
         <div class="card-body p-0">
@@ -67,6 +94,14 @@
                     <button class="btn btn-sm btn-outline-primary" (click)="viewDetails(p.id)">
                       Ver Detalles / Metas
                     </button>
+
+                    <button
+                      class="btn btn-sm btn-outline-danger ms-2"
+                      (click)="unassignUser(p.id)">
+                      Desvincular
+                    </button>
+
+
                   </td>
                 </tr>
 

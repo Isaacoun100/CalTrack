@@ -1,14 +1,15 @@
 import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { supabase } from '../supabase';
 
 @Component({
   selector: 'app-nutri-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule], // 👈 ADD THIS
   templateUrl: './nutri-dashboard.html',
-  styleUrls: ['./nutri-dashboard.css'] 
+  styleUrls: ['./nutri-dashboard.css']
 })
 export class NutriDashboardComponent implements OnInit {
 
@@ -16,6 +17,9 @@ export class NutriDashboardComponent implements OnInit {
   recentPatientMeals: { patientName: string; mealName: string; kcal: number }[] = [];
   totalGlobalCalories = 0;
   patients: any[] = []; 
+  availableUsers: any[] = [];
+  selectedUserId: number | null = null;
+  assigning = false;
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) {}
 
@@ -25,6 +29,58 @@ export class NutriDashboardComponent implements OnInit {
       return;
     }
     await this.loadPatientsData();
+    await this.loadPatientsData();
+    await this.loadAvailableUsers();
+
+  }
+
+  async loadAvailableUsers() {
+    // Get all assigned user ids
+    const { data: assigned } = await supabase
+      .from('nutritionist_users')
+      .select('user_id');
+
+    const assignedIds = assigned?.map(a => a.user_id) || [];
+
+    let query = supabase.from('users').select('id, firstName, firstLastName');
+
+    if (assignedIds.length > 0) {
+      query = query.not('id', 'in', `(${assignedIds.join(',')})`);
+    }
+
+    const { data, error } = await query.order('firstName');
+
+    if (error) {
+      console.error(error);
+      this.cdr.detectChanges();
+      return;
+    }
+    
+    this.cdr.detectChanges();
+    this.availableUsers = data || [];
+  }
+
+  async unassignUser(userId: number) {
+    if (!this.nutriId) return;
+
+    const confirmed = confirm('¿Seguro que quieres desasignar este usuario?');
+    if (!confirmed) return;
+
+    const { error } = await supabase
+      .from('nutritionist_users')
+      .delete()
+      .eq('nutritionist_id', this.nutriId)
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error desasignando usuario:', error);
+      return;
+    }
+
+    // refresh table instantly
+    await this.loadPatientsData();
+    await this.loadAvailableUsers();
+    this.cdr.detectChanges();
   }
 
   // logica para el IMC
@@ -93,6 +149,33 @@ async loadPatientsData() {
     }
     this.cdr.detectChanges();
   }
+
+  async assignUser() {
+    if (!this.selectedUserId || !this.nutriId) return;
+
+    this.assigning = true;
+
+    const { error } = await supabase
+      .from('nutritionist_users')
+      .insert({
+        nutritionist_id: this.nutriId,
+        user_id: this.selectedUserId
+      });
+
+    this.assigning = false;
+
+    if (error) {
+      console.error('Assign failed:', error);
+      return;
+    }
+
+    this.selectedUserId = null;
+
+    await this.loadPatientsData();
+    await this.loadAvailableUsers();
+    this.cdr.detectChanges();
+  }
+
 
   goToDashboard(){
     this.router.navigate(['/nutri-dashboard']);
