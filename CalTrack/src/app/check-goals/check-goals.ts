@@ -125,11 +125,8 @@ export class CheckGoals implements AfterViewInit {
         responsive: true,
         scales: {
           y: {
-            min: 50,
-            max: 100,
-            ticks: {
-              stepSize: 5   // optional: cleaner grid
-            }
+            suggestedMin: Math.min(...this.weights.map(w => w.weight)) - 15,
+            suggestedMax: Math.max(...this.weights.map(w => w.weight)) + 15
           }
 
         }

@@ -103,6 +103,9 @@ async loadPatientsData() {
   goToVerUsuarios(){
     this.router.navigate(['/ver-usuarios'])
   }
+  goToAddNutri() { 
+    this.router.navigate(['/app-sing-up-nutri']); 
+  }
   logout() {
     localStorage.clear();
     this.router.navigate(['']);

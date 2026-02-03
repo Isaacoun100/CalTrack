@@ -98,6 +98,9 @@ async guardarAlimento() {
   goToVerUsuarios(){
     this.router.navigate(['/ver-usuarios'])
   }
+  goToAddNutri() { 
+    this.router.navigate(['/app-sing-up-nutri']); 
+  }
   logout() {
     localStorage.clear();
     window.location.href = '/';

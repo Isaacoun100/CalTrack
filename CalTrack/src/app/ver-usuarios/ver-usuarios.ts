@@ -75,6 +75,17 @@ export class VerUsuarios implements OnInit {
       data: {
         labels: weights.map(w => w.date),
         datasets: [{ label: 'Peso (kg)', data: weights.map(w => w.weight), borderColor: '#6b6b6b' }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            suggestedMin: Math.min(...weights.map(w => w.weight)) - 15,
+            suggestedMax: Math.max(...weights.map(w => w.weight)) + 15
+        }
+
+
+        }
       }
     });
 
