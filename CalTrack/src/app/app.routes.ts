@@ -8,6 +8,7 @@ import { NutriDashboardComponent } from './nutri-dashboard/nutri-dashboard';
 import { SignUpComponent } from './sign-up/sign-up';
 import { GestionAlimentosComponent } from './gestion-alimentos/gestion-alimentos';
 import { VerUsuarios } from './ver-usuarios/ver-usuarios';
+import { SignUpNutriComponent } from './app-sign-up-nutri/app-sign-up-nutri';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -18,5 +19,6 @@ export const routes: Routes = [
   { path: 'check-users', component:CheckUsers},
   { path: 'log-cal', component:LogCalComponent},
   { path: 'gestion-alimentos', component: GestionAlimentosComponent},
-  { path: 'ver-usuarios', component: VerUsuarios}
+  { path: 'ver-usuarios', component: VerUsuarios},
+  { path: 'app-sing-up-nutri', component: SignUpNutriComponent}
 ];
