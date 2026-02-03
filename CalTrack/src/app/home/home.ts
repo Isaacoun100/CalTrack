@@ -70,4 +70,7 @@ export class Home {
   goToSignUp() {
     this.router.navigate(['/sign-up']);
   }
+  goToForgot(){
+    this.router.navigate(['/forgot-password'])
+  }
 }

@@ -9,6 +9,8 @@ import { SignUpComponent } from './sign-up/sign-up';
 import { GestionAlimentosComponent } from './gestion-alimentos/gestion-alimentos';
 import { VerUsuarios } from './ver-usuarios/ver-usuarios';
 import { SignUpNutriComponent } from './app-sign-up-nutri/app-sign-up-nutri';
+import { ForgotPassword } from './forgot-password/forgot-password';
+import { Component } from '@angular/core';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -20,5 +22,6 @@ export const routes: Routes = [
   { path: 'log-cal', component:LogCalComponent},
   { path: 'gestion-alimentos', component: GestionAlimentosComponent},
   { path: 'ver-usuarios', component: VerUsuarios},
-  { path: 'app-sing-up-nutri', component: SignUpNutriComponent}
+  { path: 'app-sing-up-nutri', component: SignUpNutriComponent},
+  { path: 'forgot-password', component: ForgotPassword }
 ];
