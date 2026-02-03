@@ -51,7 +51,7 @@ export class NutriDashboardComponent implements OnInit {
 
   viewDetails(patientId: number) {
     // Redirige a la vista de metas/detalles usando el ID del paciente
-    this.router.navigate(['/check-goals'], { queryParams: { userId: patientId } });
+    this.router.navigate(['/ver-usuarios'], { queryParams: { userId: patientId } });
   }
 
   async loadPatientsData() {

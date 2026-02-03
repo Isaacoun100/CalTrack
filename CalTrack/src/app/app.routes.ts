@@ -6,7 +6,7 @@ import { CheckUsers } from './check-users/check-users';
 import { LogCalComponent } from './log-cal/log-cal';
 import { NutriDashboardComponent } from './nutri-dashboard/nutri-dashboard';
 import { SignUpComponent } from './sign-up/sign-up';
-import { GestionAlimentos } from './gestion-alimentos/gestion-alimentos';
+import { GestionAlimentosComponent } from './gestion-alimentos/gestion-alimentos';
 import { VerUsuarios } from './ver-usuarios/ver-usuarios';
 
 export const routes: Routes = [
@@ -17,6 +17,6 @@ export const routes: Routes = [
   { path: 'check-goals', component:CheckGoals},
   { path: 'check-users', component:CheckUsers},
   { path: 'log-cal', component:LogCalComponent},
-  { path: 'gestion-alimentos', component: GestionAlimentos},
+  { path: 'gestion-alimentos', component: GestionAlimentosComponent},
   { path: 'ver-usuarios', component: VerUsuarios}
 ];

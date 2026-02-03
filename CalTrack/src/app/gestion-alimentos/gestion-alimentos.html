@@ -1,1 +1,87 @@
-<p>gestion-alimentos works!</p>
+<div class="d-flex vh-100">
+    <div class="bg-dark text-white p-3" style="width: 240px;">
+      <h4 class="mb-4">CalTrack</h4>
+      <ul class="nav flex-column gap-2">
+        <li class="nav-item">
+          <button class="btn btn-outline-light w-100 " (click)="goToDashboard()" >
+            User Dashboard
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-outline-light w-100 active bg-primary rounded bg-white" (click)="goToGestAlimentos()">
+            Gestión Alimentos
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-outline-light w-100" (click)="goToVerUsuarios()">
+            Ver Usuarios
+          </button>
+        </li>
+        <li class="nav-item mt-auto">
+          <button class="btn btn-outline-light w-100" (click)="logout()">
+            Sign Out
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex-grow-1 p-4 bg-light overflow-auto">
+    <h2>Gestión del Catálogo de Alimentos</h2>
+    <p class="text-muted">Agregue o edite los alimentos disponibles para los pacientes.</p>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 border-primary">
+                <h5>{{ editando ? 'Editar Alimento' : 'Nuevo Alimento' }}</h5>
+                <div class="mb-3">
+                    <label>Nombre</label>
+                    <input type="text" class="form-control" [(ngModel)]="nuevoAlimento.name">
+                </div>
+                <div class="mb-3">
+                    <label>Calorías (kcal)</label>
+                    <input type="number" class="form-control" [(ngModel)]="nuevoAlimento.kcal">
+                </div>
+                <div class="mb-3">
+                    <label>Peso Base (g)</label>
+                    <input type="number" class="form-control" [(ngModel)]="nuevoAlimento.weight">
+                </div>
+                
+                <button class="btn w-100 mb-2" [ngClass]="editando ? 'btn-warning' : 'btn-success'" (click)="guardarAlimento()">
+                    {{ editando ? 'Actualizar Cambios' : 'Guardar en Catálogo' }}
+                </button>
+                
+                <button *ngIf="editando" class="btn btn-secondary w-100" (click)="cancelarEdicion()">
+                    Cancelar
+                </button>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>kcal</th>
+                        <th>Peso</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let a of alimentos">
+                        <td>{{ a.name }}</td>
+                        <td>{{ a.kcal }}</td>
+                        <td>{{ a.weight }}g</td>
+                        <td class="text-end">
+                        <button class="btn btn-sm btn-outline-warning me-2" (click)="prepararEdicion(a)">
+                            Editar
+                        </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
