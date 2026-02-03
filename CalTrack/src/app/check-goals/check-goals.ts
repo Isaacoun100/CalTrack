@@ -125,8 +125,13 @@ export class CheckGoals implements AfterViewInit {
         responsive: true,
         scales: {
           y: {
-            beginAtZero: false
+            min: 50,
+            max: 100,
+            ticks: {
+              stepSize: 5   // optional: cleaner grid
+            }
           }
+
         }
       }
     });
