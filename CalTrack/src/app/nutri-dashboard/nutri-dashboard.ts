@@ -54,12 +54,20 @@ export class NutriDashboardComponent implements OnInit {
     this.router.navigate(['/ver-usuarios'], { queryParams: { userId: patientId } });
   }
 
-  async loadPatientsData() {
+async loadPatientsData() {
+    // 1. Traemos la relación, datos básicos del usuario 
+    // Y el último peso registrado en la nueva tabla users_weight
     const { data: assignments, error: assignError } = await supabase
       .from('nutritionist_users')
       .select(`
         user_id,
-        users (*) 
+        users (
+          id, firstName, firstLastName, age, height,
+          users_weight (
+            weight,
+            date
+          )
+        )
       `)
       .eq('nutritionist_id', this.nutriId);
 
@@ -67,30 +75,28 @@ export class NutriDashboardComponent implements OnInit {
       console.error('Error obteniendo pacientes:', assignError);
       return;
     }
-    this.patients = assignments.map(a => a.users).filter(u => u !== null);
-    if (this.patients.length === 0) return;
-    const patientIds = this.patients.map(p => p.id);
-    const { data, error } = await supabase
-      .from('users_meals')
-      .select(`
-        kcal,
-        users!inner ( firstName, firstLastName ),
-        meals ( name )
-      `)
-      .in('user_id', patientIds)
-      .order('date', { ascending: false })
-      .limit(10);
-      this.cdr.detectChanges();
 
-    if (!error && data) {
-      this.recentPatientMeals = data.map((row: any) => ({
-        patientName: `${row.users?.firstName} ${row.users?.firstLastName}`,
-        mealName: row.meals?.name ?? 'Comida desconocida',
-        kcal: Number(row.kcal || 0)
-      }));
-      
-      this.totalGlobalCalories = this.recentPatientMeals.reduce((sum, m) => sum + m.kcal, 0);
+    // Procesamos los pacientes para extraer solo el peso más reciente
+    this.patients = assignments.map((a: any) => {
+      const user = a.users;
+      // Ordenamos los pesos por fecha descendente y tomamos el primero
+      const weights = user.users_weight || [];
+      const latestRecord = weights.sort((a: any, b: any) => 
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      )[0];
+
+      return {
+        ...user,
+        // Si no tiene registros en la tabla nueva, podrías poner 0 o null
+        weight: latestRecord ? latestRecord.weight : 0 
+      };
+    }).filter(u => u !== null);
+
+    if (this.patients.length === 0) {
+      this.cdr.detectChanges();
+      return;
     }
+    this.cdr.detectChanges();
   }
 
   goToDashboard(){
