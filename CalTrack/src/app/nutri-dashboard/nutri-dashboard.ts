@@ -55,8 +55,6 @@ export class NutriDashboardComponent implements OnInit {
   }
 
 async loadPatientsData() {
-    // 1. Traemos la relación, datos básicos del usuario 
-    // Y el último peso registrado en la nueva tabla users_weight
     const { data: assignments, error: assignError } = await supabase
       .from('nutritionist_users')
       .select(`
@@ -75,11 +73,8 @@ async loadPatientsData() {
       console.error('Error obteniendo pacientes:', assignError);
       return;
     }
-
-    // Procesamos los pacientes para extraer solo el peso más reciente
     this.patients = assignments.map((a: any) => {
       const user = a.users;
-      // Ordenamos los pesos por fecha descendente y tomamos el primero
       const weights = user.users_weight || [];
       const latestRecord = weights.sort((a: any, b: any) => 
         new Date(b.date).getTime() - new Date(a.date).getTime()
